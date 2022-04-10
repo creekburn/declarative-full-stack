@@ -1,0 +1,171 @@
+openapi: 3.1.0
+info:
+  title: CB TODO
+  description: API for Creek Burn TODO Application.
+  version: 0.0.0
+servers:
+  - url: http://api.example.com/v1
+    description: Local Fake Server
+paths:
+  /api/todo:
+    get:
+      summary: Find TODOs
+      description: Retrieve all TODOs
+      operationId: apiGetTodos
+      responses:
+        '200':
+          $ref: '#/components/responses/todos'
+    post:
+      summary: Create TODO
+      description: Create a new TODO
+      operationId: apiCreateTodo
+      requestBody:
+        $ref: '#/components/requestBodies/todo'
+      responses:
+        '200':
+          $ref: '#/components/responses/todo'
+  /api/todo/{title}:
+    parameters:
+      - $ref: '#/components/parameters/todoTitle'
+    get:
+      summary: Get TODO
+      description: Retrieve TODO by Title
+      operationId: apiGetTodo
+      responses:
+        '200':
+          $ref: '#/components/responses/todo'
+    put:
+      summary: Update TODO
+      description: Update TODO by Title
+      operationId: apiPutTodo
+      requestBody:
+        $ref: '#/components/requestBodies/todo'
+      responses:
+        '200':
+          $ref: '#/components/responses/todo'
+    delete:
+      summary: Delete Single TODO
+      description: Delete TODO by Title
+      operationId: apiDeleteTodo
+      responses:
+        '200':
+          $ref: '#/components/responses/todo'
+components:
+  schemas:
+    'todo':
+      title: TODO
+      description: TODO Object
+      type: object
+      required:
+        - title
+        - description
+        - due
+      properties:
+        title:
+          title: Title
+          description: Simple Name for TODO
+          type: string
+          maxLength: 50
+        description:
+          title: Description
+          description: Details for TODO
+          type: string
+          maxLength: 5000
+        due:
+          title: Due Date+Time
+          description: Expected Completion Date and Time
+          type: string
+          format: date-time
+        priority:
+          title: Priority
+          description: |
+            Priority of this item within a queue.
+            Used to augment sorts, and is not unique within all TODOs.
+            TODOs should be ranked in ascending order.
+            TODOs without a priority are ranked at the end.
+          type: integer
+          minimum: 0
+        status:
+          title: Status
+          description: Current Status of the TODO.
+          type: string
+          default: NOT_STARTED
+          enum:
+            - NOT_STARTED
+            - STARTED
+            - ON_HOLD
+            - IN_PROGRESS
+            - DONE
+  requestBodies:
+    'todo':
+      description: TODO
+      required: true
+      content:
+        'application/json':
+          schema: 
+            $ref: '#/components/schemas/todo'
+          examples:
+            basic:
+              $ref: '#/components/examples/todo'
+  parameters:
+    'todoTitle':
+      in: path
+      name: title
+      description: Unique Identifer in Path for TODO Objects
+      required: true
+      schema:
+        type: string
+  responses:
+    'todo':
+      description: Multiple TODOs
+      content:
+        'application/json':
+          schema: 
+            $ref: '#/components/schemas/todo'
+          examples:
+            basic:
+              $ref: '#/components/examples/todo'
+    'todos':
+      description: Multiple TODOs
+      content:
+        'application/json':
+          schema: 
+            type: array
+            items:
+              $ref: '#/components/schemas/todo'
+          examples:
+            basic:
+              $ref: '#/components/examples/todos'
+  examples: 
+    'todos':
+      summary: List of TODO
+      description: An array containing a single TODO.
+      value:
+        - title: Example TODO
+          description: |
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam et nulla et purus tincidunt consequat eget et felis. Integer augue libero, molestie ac metus at, imperdiet eleifend sapien. Pellentesque placerat nunc tellus, ut consequat tortor sodales vitae. Nunc lobortis dolor erat, id consectetur erat suscipit quis. Mauris mollis tortor sapien, viverra rutrum felis semper ac. Quisque finibus lorem vitae faucibus mattis. Maecenas rhoncus molestie libero euismod pharetra.
+
+            Vestibulum vel velit eget lectus sodales volutpat. Morbi placerat nisi diam. Vestibulum lorem arcu, semper eu lacus ut, ullamcorper auctor ante. Morbi condimentum ex erat, a mollis quam commodo nec. Etiam facilisis aliquet leo in ultricies. In tristique massa sodales pulvinar placerat. Curabitur tincidunt, ligula sit amet tristique dapibus, libero massa euismod mi, ac facilisis nisi sapien sed sapien. Vivamus dui nunc, porta nec tellus sed, eleifend iaculis lorem. Nullam quis semper urna. Duis vitae cursus tortor. Vivamus nibh tortor, viverra vitae sem non, egestas tempor turpis. Donec vehicula egestas ipsum, a tincidunt augue fringilla at.
+
+            Suspendisse orci velit, aliquam et ex et, mollis rhoncus enim. Vivamus massa mi, consequat nec eleifend vitae, suscipit sit amet enim. Nunc non feugiat neque. Vivamus aliquam vitae tortor ac finibus. Aenean fringilla sem non sem hendrerit elementum. Phasellus porttitor tellus vel turpis scelerisque ultricies. Sed venenatis, augue at pellentesque volutpat, est neque pharetra arcu, in dignissim tellus enim et diam. Phasellus nisl odio, pharetra eget pulvinar ac, posuere sed felis. Praesent bibendum ligula fringilla diam venenatis iaculis. Sed feugiat volutpat augue id dapibus. Vivamus et libero sit amet purus porttitor interdum sed vel metus. Donec eros odio, condimentum nec tortor quis, condimentum pretium sem. Etiam sollicitudin accumsan suscipit. Donec luctus nulla tortor, porta ultrices est viverra quis. Vivamus quam neque, accumsan eu elit et, sollicitudin ultrices nibh. Curabitur venenatis augue a luctus pretium.
+
+            Nullam lobortis urna at ante accumsan pulvinar. Pellentesque semper, mauris a ullamcorper lobortis, est dolor imperdiet odio, in rutrum nunc neque nec sapien. Nulla facilisi. Sed porta arcu et eros placerat, id dictum magna feugiat. Sed a orci ullamcorper, elementum arcu nec, elementum odio. Aenean quam velit, maximus eget nisi vel, rutrum finibus felis. Aenean lobortis fringilla mauris vel mattis. Nulla vitae lorem luctus, varius nunc eu, semper tortor. Donec vehicula suscipit velit non pulvinar.
+
+            Sed vehicula, neque eu congue vehicula, odio velit vehicula nunc, vel pharetra leo elit eu nunc. Integer et luctus arcu. Phasellus egestas ornare sem vel auctor. Maecenas porttitor tincidunt mauris ac dapibus. Integer pellentesque, justo ullamcorper facilisis bibendum, odio urna dapibus ipsum, ut condimentum elit urna sit amet nunc. Praesent pellentesque mattis mi non placerat. Cras ex sem, sodales sed feugiat vel, semper eget nibh. In facilisis, lectus suscipit pulvinar ultricies, urna odio aliquam eros, eget feugiat odio ante consectetur dolor. Vivamus molestie et ligula a tempus.
+          due: '2022-05-15T13:30:00.00Z'
+    'todo':
+      summary: TODO
+      description: A single TODO.
+      value:
+        title: Example TODO
+        description: |
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam et nulla et purus tincidunt consequat eget et felis. Integer augue libero, molestie ac metus at, imperdiet eleifend sapien. Pellentesque placerat nunc tellus, ut consequat tortor sodales vitae. Nunc lobortis dolor erat, id consectetur erat suscipit quis. Mauris mollis tortor sapien, viverra rutrum felis semper ac. Quisque finibus lorem vitae faucibus mattis. Maecenas rhoncus molestie libero euismod pharetra.
+
+          Vestibulum vel velit eget lectus sodales volutpat. Morbi placerat nisi diam. Vestibulum lorem arcu, semper eu lacus ut, ullamcorper auctor ante. Morbi condimentum ex erat, a mollis quam commodo nec. Etiam facilisis aliquet leo in ultricies. In tristique massa sodales pulvinar placerat. Curabitur tincidunt, ligula sit amet tristique dapibus, libero massa euismod mi, ac facilisis nisi sapien sed sapien. Vivamus dui nunc, porta nec tellus sed, eleifend iaculis lorem. Nullam quis semper urna. Duis vitae cursus tortor. Vivamus nibh tortor, viverra vitae sem non, egestas tempor turpis. Donec vehicula egestas ipsum, a tincidunt augue fringilla at.
+
+          Suspendisse orci velit, aliquam et ex et, mollis rhoncus enim. Vivamus massa mi, consequat nec eleifend vitae, suscipit sit amet enim. Nunc non feugiat neque. Vivamus aliquam vitae tortor ac finibus. Aenean fringilla sem non sem hendrerit elementum. Phasellus porttitor tellus vel turpis scelerisque ultricies. Sed venenatis, augue at pellentesque volutpat, est neque pharetra arcu, in dignissim tellus enim et diam. Phasellus nisl odio, pharetra eget pulvinar ac, posuere sed felis. Praesent bibendum ligula fringilla diam venenatis iaculis. Sed feugiat volutpat augue id dapibus. Vivamus et libero sit amet purus porttitor interdum sed vel metus. Donec eros odio, condimentum nec tortor quis, condimentum pretium sem. Etiam sollicitudin accumsan suscipit. Donec luctus nulla tortor, porta ultrices est viverra quis. Vivamus quam neque, accumsan eu elit et, sollicitudin ultrices nibh. Curabitur venenatis augue a luctus pretium.
+
+          Nullam lobortis urna at ante accumsan pulvinar. Pellentesque semper, mauris a ullamcorper lobortis, est dolor imperdiet odio, in rutrum nunc neque nec sapien. Nulla facilisi. Sed porta arcu et eros placerat, id dictum magna feugiat. Sed a orci ullamcorper, elementum arcu nec, elementum odio. Aenean quam velit, maximus eget nisi vel, rutrum finibus felis. Aenean lobortis fringilla mauris vel mattis. Nulla vitae lorem luctus, varius nunc eu, semper tortor. Donec vehicula suscipit velit non pulvinar.
+
+          Sed vehicula, neque eu congue vehicula, odio velit vehicula nunc, vel pharetra leo elit eu nunc. Integer et luctus arcu. Phasellus egestas ornare sem vel auctor. Maecenas porttitor tincidunt mauris ac dapibus. Integer pellentesque, justo ullamcorper facilisis bibendum, odio urna dapibus ipsum, ut condimentum elit urna sit amet nunc. Praesent pellentesque mattis mi non placerat. Cras ex sem, sodales sed feugiat vel, semper eget nibh. In facilisis, lectus suscipit pulvinar ultricies, urna odio aliquam eros, eget feugiat odio ante consectetur dolor. Vivamus molestie et ligula a tempus.
+        due: '2022-05-15T13:30:00.00Z'
