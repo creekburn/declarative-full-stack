@@ -6,7 +6,7 @@ import { URL } from 'url';
 import { readFile } from 'fs/promises';
 import $RefParser from "@apidevtools/json-schema-ref-parser";
 
-import { register } from './mongo-handler.mjs';
+import { register } from './dynamodb-handler.mjs';
 import { HEADERS } from './const.mjs';
 
 const yaml = YAML.parse(await readFile(new URL('./todo.schema.yaml', import.meta.url), { encoding: 'utf8' }));

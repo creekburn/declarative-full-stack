@@ -24,9 +24,9 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/todo'
-  /api/todo/{title}:
+  /api/todo/{id}:
     parameters:
-      - $ref: '#/components/parameters/todoTitle'
+      - $ref: '#/components/parameters/todoId'
     get:
       summary: Get TODO
       description: Retrieve TODO by Title
@@ -61,6 +61,11 @@ components:
         - description
         - due
       properties:
+        id: 
+          title: ID
+          description: Unique Identifier for this TODO
+          type: string
+          format: uuid
         title:
           title: Title
           description: Simple Name for TODO
@@ -108,13 +113,13 @@ components:
             basic:
               $ref: '#/components/examples/todo'
   parameters:
-    'todoTitle':
+    'todoId':
       in: path
-      name: title
+      name: id
       description: Unique Identifer in Path for TODO Objects
       required: true
       schema:
-        type: string
+        $ref: '#/components/schemas/todo/properties/id'
   responses:
     'todo':
       description: Multiple TODOs

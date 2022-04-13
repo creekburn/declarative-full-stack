@@ -3,11 +3,16 @@ services:
   lambda:
     depends_on:
       - mongo
+      - dynamodb
     build: .
     ports:
       - "9000:8080"
     environment:
       MONGO_URI: mongodb://root:example@mongo:27017/?authMechanism=DEFAULT
+      DYNAMODB_ENDPOINT: http://dynamodb:8000
+      AWS_REGION: us-west-2
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
   mongo:
     image: mongo:5.0.6
     environment:
@@ -17,3 +22,11 @@ services:
       - "27017:27017"
     volumes:
       - ./mongo/data:/data/db
+  dynamodb:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: 'amazon/dynamodb-local:1.18.0'
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./dynamodb/data:/home/dynamodblocal/data
+    working_dir: /home/dynamodblocal

@@ -5,7 +5,7 @@ COPY node_modules/ ${LAMBDA_TASK_ROOT}/node_modules
 # Copy Root package.json file
 COPY package.json ${LAMBDA_TASK_ROOT}/package.json
 # Copy API directory into Execution directory.
-COPY api/ ${LAMBDA_TASK_ROOT}
+COPY api/ ${LAMBDA_TASK_ROOT}/api
 
 # Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
-CMD [ "app.handler" ]
+CMD [ "api/app.handler" ]
