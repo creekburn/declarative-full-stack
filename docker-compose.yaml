@@ -1,27 +1,27 @@
 version: "3.9"
 services:
-  lambda:
+  ui:
     depends_on:
-      - mongo
-      - dynamodb
-    build: .
-    ports:
-      - "9000:8080"
-    environment:
-      MONGO_URI: mongodb://root:example@mongo:27017/?authMechanism=DEFAULT
-      DYNAMODB_ENDPOINT: http://dynamodb:8000
-      AWS_REGION: us-west-2
-      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
-      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
-  mongo:
-    image: mongo:5.0.6
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
+      - sam
+    image: node:17.9.0
     volumes:
-      - ./mongo/data:/data/db
+      - ./spa:/home/node/app
+    ports:
+      - "3002:3000"
+    working_dir: /home/node/app
+    command: "npm start"
+  sam:
+    depends_on:
+      - dynamodb
+    build: ./lambda
+    working_dir: /c/workspace/todo/lambda
+    volumes:
+      - ~/.aws:/root/.aws
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./lambda:/c/workspace/todo/lambda
+    ports:
+      - "8080:3000"
+    command: local start-api --container-host host.docker.internal --host 0.0.0.0 --docker-network todo_default
   dynamodb:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: 'amazon/dynamodb-local:1.18.0'

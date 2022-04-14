@@ -9,7 +9,7 @@ import $RefParser from "@apidevtools/json-schema-ref-parser";
 import { register } from './dynamodb-handler.mjs';
 import { HEADERS } from './const.mjs';
 
-const yaml = YAML.parse(await readFile(new URL('./todo.schema.yaml', import.meta.url), { encoding: 'utf8' }));
+const yaml = YAML.parse(await readFile(new URL('./app-schema.yaml', import.meta.url), { encoding: 'utf8' }));
 const schema = await $RefParser.dereference(yaml);
 
 // create api with your definition file or object

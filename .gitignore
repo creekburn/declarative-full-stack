@@ -1,3 +1,9 @@
 mongo
 dynamodb
+localstack
 node_modules
+.terraform
+.terraform.*
+*.tfstate
+*.tfstate.d
+app-schema.yaml

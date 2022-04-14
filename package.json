@@ -5,11 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env \"NODE_OPTIONS=--experimental-vm-modules\" jest",
-    "watch": "nodemon --exec \"docker-compose up --build --remove-orphans -d\""
+    "watch": "nodemon --exec \"docker-compose up --build --remove-orphans -d\"",
+    "copy-schema": "node scripts/json-schema-dereference.mjs ./schema.yaml ./terraform/app-schema.yaml ./lambda/src/api/app-schema.yaml"
   },
   "nodemonConfig": {
-    "ignore": ["__tests__/*", "dynamodb/*", "mongo/*", "node_modules/*"]
+    "ignore": [
+      "__tests__/*",
+      "dynamodb/*",
+      "mongo/*",
+      "node_modules/*"
+    ]
   },
+  "workspaces": [
+    "spa"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
