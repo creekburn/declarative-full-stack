@@ -7,7 +7,7 @@ import { readFile } from 'fs/promises';
 import $RefParser from "@apidevtools/json-schema-ref-parser";
 
 import { register } from './dynamodb-handler.mjs';
-import { HEADERS } from './const.mjs';
+import { HEADERS, SCHEMA_OPERATION } from './const.mjs';
 
 const yaml = YAML.parse(await readFile(new URL('./app-schema.yaml', import.meta.url), { encoding: 'utf8' }));
 const schema = await $RefParser.dereference(yaml);
@@ -20,6 +20,13 @@ const api = new OpenAPIBackend({
     return ajv;
   }
 });
+
+// Schema Endpoint
+api.register(SCHEMA_OPERATION, (c, req, res) => ({
+  statusCode: 200,
+  body: JSON.stringify(schema),
+  headers: HEADERS
+}));
 
 // Dynamically Register Handlers
 register(api, schema);

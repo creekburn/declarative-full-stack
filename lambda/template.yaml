@@ -53,6 +53,11 @@ Resources:
         Variables:
           DYNAMODB_ENDPOINT: http://dynamodb:8000
       Events:
+        Root:
+          Type: Api
+          Properties:
+            Path: /api
+            Method: ANY
         Api:
           Type: Api
           Properties:

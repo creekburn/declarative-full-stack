@@ -7,6 +7,14 @@ MVP for basic setup.
 
 1. DynamoDB ORM
 2. SPA
+  * Deliver Schema from Backend
+  * Create From
+  * List
+    * Pagination
+    * Sort
+    * Filters
+  * Edit Form
+  * Delete Buttons
 3. Terraform
 4. Actions
 

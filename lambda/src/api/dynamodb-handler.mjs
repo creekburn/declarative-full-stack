@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { v4 } from 'uuid';
 import { DynamoDBClient, CreateTableCommand, DescribeTableCommand, ResourceNotFoundException, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
-import { JSON_MIME_TYPE, ok, internalServerError, notFound, methodNotAllowed } from './const.mjs';
+import { SCHEMA_OPERATION, JSON_MIME_TYPE, ok, internalServerError, notFound, methodNotAllowed } from './const.mjs';
 
 const client = new DynamoDBClient({ endpoint: process.env.DYNAMODB_ENDPOINT });
 const docs = DynamoDBDocument.from(client);
@@ -102,7 +102,7 @@ export const operationHandler = async (c, req, res) => {
 
 export const register = (api, schema) => {
   const operationIds = _.flatMap(schema.paths, (pathItem) => {
-    return _.map(_.pickBy(pathItem, (operation) => _.has(operation, 'operationId')), (operation) => {
+    return _.map(_.pickBy(pathItem, (operation) => _.has(operation, 'operationId') && operation.operationId !== SCHEMA_OPERATION), (operation) => {
       let schema = operation.responses['200'].content[JSON_MIME_TYPE].schema;
       if (schema.type === 'array') {
         schema = schema.items;

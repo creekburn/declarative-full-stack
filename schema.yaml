@@ -7,6 +7,18 @@ servers:
   - url: http://api.example.com/v1
     description: Local Fake Server
 paths:
+  /api:
+    get:
+      summary: Get Schema
+      description: Obtain this Schema Document
+      operationId: apiGetSchema
+      responses:
+        '200':
+          description: This Schema
+          content:
+            'application/json':
+              schema:
+                type: object
   /api/todo:
     get:
       summary: Find TODOs

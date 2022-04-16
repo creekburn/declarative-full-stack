@@ -3,6 +3,8 @@ export const HEADERS = {
   'Content-Type': JSON_MIME_TYPE
 };
 
+export const SCHEMA_OPERATION = 'apiGetSchema';
+
 export const ok = (body) => ({
   statusCode: 200,
   body: JSON.stringify(body),
