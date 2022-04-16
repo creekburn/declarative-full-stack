@@ -1,6 +1,9 @@
 export const JSON_MIME_TYPE = 'application/json';
 export const HEADERS = {
-  'Content-Type': JSON_MIME_TYPE
+  'Content-Type': JSON_MIME_TYPE,
+  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': '*'
 };
 
 export const SCHEMA_OPERATION = 'apiGetSchema';

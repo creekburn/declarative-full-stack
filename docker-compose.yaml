@@ -7,7 +7,7 @@ services:
     volumes:
       - ./spa:/home/node/app
     ports:
-      - "3002:3000"
+      - "3000:3000"
     working_dir: /home/node/app
     command: "npm start"
   sam:

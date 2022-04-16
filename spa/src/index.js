@@ -9,6 +9,7 @@ import {
 import './index.css';
 import Home from './page/Home';
 import NotFound from './page/NotFound';
+import DeclarativeUI from './component/DeclarativeUI';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -16,6 +17,7 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" exact element={<Home />} />
+        <Route path="/todo" element={<DeclarativeUI schemaURL={'http://localhost:8080/api'} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
