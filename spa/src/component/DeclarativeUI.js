@@ -1,20 +1,30 @@
 import { useEffect, useState } from 'react';
+import _ from 'lodash';
 
-function DeclarativeUI({schemaURL}) {
+import Create from './Create';
+
+function DeclarativeUI({schemaURL, createOperation}) {
   const [schema, setSchema] = useState({});
 
   useEffect(() => {
     fetch(schemaURL)
       .then(response => response.json())
       .then(setSchema);
-  }, [schemaURL])
+  }, [schemaURL]);
 
   return (
-    <main>
-      <h1>Declarative UI</h1>
-      <pre>
-        {JSON.stringify(schema, null, 2)}
-      </pre>
+    <main class="container">
+      <section>
+        <h1>Declarative UI</h1>
+      </section>
+      <section>
+        <Create schema={schema} operation={createOperation} />
+      </section>
+      <section>
+        <pre>
+          {JSON.stringify(schema, null, 2)}
+        </pre>
+      </section>
     </main>
   );
 }

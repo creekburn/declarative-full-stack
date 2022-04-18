@@ -6,6 +6,7 @@ import {
   Routes,
   Route,
 } from 'react-router-dom';
+import '@picocss/pico'
 import './index.css';
 import Home from './page/Home';
 import NotFound from './page/NotFound';
@@ -17,7 +18,10 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" exact element={<Home />} />
-        <Route path="/todo" element={<DeclarativeUI schemaURL={'http://localhost:8080/api'} />} />
+        <Route path="/todo" element={<DeclarativeUI 
+          schemaURL={'http://localhost:8080/api'}
+          createOperation={'apiCreateTodo'}
+        />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
