@@ -39,23 +39,25 @@ const METHOD_HANDLER = {
   },
   'put': async (c) => {
     const schema = c.operation.responses['200'].content[JSON_MIME_TYPE].schema;
-    const Item = _.merge({}, c.request.requestBody, { id: c.request.params.id })
+    const Item = _.omit(c.request.requestBody, ['id']);
     try {
-      const result = await docs.put({
+      const input = {
         TableName: toTableName(schema.title),
-        Item,
-        ConditionExpression: 'attribute_exists(id) AND id = :id',
-        ExpressionAttributeValues: {
-          ':id': {
-            'S': c.request.params.id
-          }
-        }
-      });
+        ReturnValues: 'ALL_NEW',
+        Key: {
+          id: c.request.params.id
+        },
+        ExpressionAttributeNames: _.reduce(_.keys(Item), (acc, key) => (acc[`#${key}`] = key, acc), {}),
+        ExpressionAttributeValues: _.reduce(Item, (acc, value, key) => (acc[`:${key}`] = value, acc), {}),
+        UpdateExpression: 'SET ' + _.join(_.map(_.keys(Item), (key) => `#${key} = :${key}`), ', ')
+      };
+      console.log(`INPUT: ${JSON.stringify(input)}`);
+      const result = await docs.update(input);
       console.log(`RESULT: ${JSON.stringify(result)}`);
       return ok(Item);
     } catch (e) {
       if (e instanceof ConditionalCheckFailedException) {
-        console.error(e.message);
+        console.error(JSON.stringify(e));
         return notFound(c);
       } else {
         throw e;
@@ -88,7 +90,7 @@ const METHOD_HANDLER = {
 
 export const operationHandler = async (c, req, res) => {
   const method = c.operation.method;
-  
+
   if (METHOD_HANDLER[method]) {
     try {
       return METHOD_HANDLER[method](c);
@@ -115,7 +117,7 @@ export const register = (api, schema) => {
         const command = new DescribeTableCommand({
           TableName: toTableName(schema.title)
         });
-    
+
         client.send(command)
           .then(result => {
             console.log('Table Found');
@@ -149,9 +151,9 @@ export const register = (api, schema) => {
             }
           });
       }
-  
+
       return operation.operationId;
     })
   });
-  api.register(_.merge(..._.map(operationIds, (id) => ({[id]: operationHandler}))));
+  api.register(_.merge(..._.map(operationIds, (id) => ({ [id]: operationHandler }))));
 }

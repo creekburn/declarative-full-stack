@@ -4,7 +4,7 @@ info:
   description: API for Creek Burn TODO Application.
   version: 0.0.0
 servers:
-  - url: http://api.example.com/v1
+  - url: http://localhost:8080
     description: Local Fake Server
 paths:
   /api:
@@ -24,6 +24,8 @@ paths:
       summary: Find TODOs
       description: Retrieve all TODOs
       operationId: apiGetTodos
+      parameters:
+        - $ref: '#/components/parameters/page'
       responses:
         '200':
           $ref: '#/components/responses/todos'
@@ -132,6 +134,14 @@ components:
       required: true
       schema:
         $ref: '#/components/schemas/todo/properties/id'
+    'page':
+      in: query
+      name: page
+      description: Page Number of a paginated request.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
   responses:
     'todo':
       description: Multiple TODOs

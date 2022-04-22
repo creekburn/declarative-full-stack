@@ -21,7 +21,7 @@ services:
       - ./lambda:/c/workspace/todo/lambda
     ports:
       - "8080:3000"
-    command: local start-api --container-host host.docker.internal --host 0.0.0.0 --docker-network todo_default
+    command: local start-api --container-host host.docker.internal --host 0.0.0.0 --docker-network todo_default -l /dev/stdout
   dynamodb:
     command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
     image: 'amazon/dynamodb-local:1.18.0'
