@@ -1,8 +1,8 @@
 import Form from '@rjsf/core';
 import _ from 'lodash';
 
-import { init } from './OpenAPIClient';
-import { getOperation } from './helper';
+import { init } from '../../service/OpenAPIClient';
+import { getOperation } from '../../service/helper';
 
 function Create({
   schema,

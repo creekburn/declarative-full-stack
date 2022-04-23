@@ -17,6 +17,7 @@ root.render(
       <Header />
       <Routes>
         <Route path="/" exact element={<Home />} />
+        {/* TODO: Obtain Schema */}
         <Route path="/todo/*" element={<DeclarativeRoutes schemaURL="http://localhost:8080/api" />} />
         <Route path="*" element={<NotFound />} />
       </Routes>

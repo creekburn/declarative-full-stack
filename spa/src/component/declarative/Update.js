@@ -3,8 +3,10 @@ import Form from '@rjsf/core';
 import _ from 'lodash';
 import { useParams, Link } from 'react-router-dom';
 
-import { init } from './OpenAPIClient';
-import { getOperation } from './helper';
+import { init } from '../../service/OpenAPIClient';
+import { getOperation } from '../../service/helper';
+
+import Delete from './Delete';
 
 function Update({
   schema,
@@ -16,6 +18,7 @@ function Update({
   const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
+  // TODO: Dynamic Parameter generation?
   const parameters = [{ name: 'id', value: params.id, in: 'path' }];
 
   useEffect(() => {
@@ -76,6 +79,8 @@ function Update({
           <div className="grid">
             <button type="submit">Submit</button>
             <button type="reset" onClick={onCancel}>Cancel</button>
+            {/* TODO: How to obtain operationId? */}
+            <Delete schema={schema} id={data.id} operation="apiDeleteTodo" onDelete={onCancel} />
           </div>
         </Form>
       );

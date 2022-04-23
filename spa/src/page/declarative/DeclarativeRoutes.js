@@ -28,6 +28,7 @@ function DeclarativeRoutes({ schemaURL }) {
     if (schemaLoading) {
       return <p className="center" aria-busy="true">Loading Schema</p>;
     } else {
+      // TODO: How to obtain operationIds?
       return (<Routes>
         <Route index element={<Read schema={schema} operation="apiGetTodos" />} />
         <Route path="new" element={<Create schema={schema} operation="apiCreateTodo" onCreate={navigateToIndex} onCancel={navigateToIndex} />} />

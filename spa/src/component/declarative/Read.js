@@ -2,8 +2,10 @@ import { useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import _ from 'lodash';
 
-import { init } from './OpenAPIClient';
-import { getOperation } from './helper';
+import { init } from '../../service/OpenAPIClient';
+import { getOperation } from '../../service/helper';
+
+import Delete from './Delete';
 
 function Read({
   schema,
@@ -87,6 +89,7 @@ function Read({
             <Link to={item.id}>
               <button>Edit</button>
             </Link>
+            <Delete schema={schema} id={item.id} operation="apiDeleteTodo" onDelete={getData} />
           </td>
         </tr>
       ));

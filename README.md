@@ -8,12 +8,9 @@ MVP for basic setup.
 1. DynamoDB ORM
 2. SPA
   * Deliver Schema from Backend
-  * Create From
+  * Create
   * List
-    * Pagination
-    * Sort
-    * Filters
-  * Edit Form
+  * Edit
   * Delete Buttons
 3. Terraform
 4. Actions
@@ -53,3 +50,17 @@ MVP for basic setup.
 * TODO Feed - Order by Due Date then Priority, with Status Changer
 * Login - All TODO are Authorized to single user for CRUD
 
+
+## Milestone 2
+
+### Features
+
+* Allow Dynamic IDs
+* Searching
+  * Pagination
+  * Sort
+  * Filters
+* UI
+  * Error Handling
+  * Localization
+  * Bake Schema into Application
