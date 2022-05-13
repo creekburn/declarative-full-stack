@@ -18,7 +18,7 @@ root.render(
       <Routes>
         <Route path="/" exact element={<Home />} />
         {/* TODO: Obtain Schema */}
-        <Route path="/todo/*" element={<DeclarativeRoutes schemaURL="http://localhost:8080/api" />} />
+        <Route path="/todo/*" element={<DeclarativeRoutes schemaURL={process.env.REACT_APP_API_SCHEMA_URL} />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

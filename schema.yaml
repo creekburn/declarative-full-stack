@@ -5,7 +5,9 @@ info:
   version: 0.0.0
 servers:
   - url: http://localhost:8080
-    description: Local Fake Server
+    description: local
+  - url: https://api.cb-todo.dev.creek-burn.net
+    description: dev
 paths:
   /api:
     get:

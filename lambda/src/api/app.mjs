@@ -7,16 +7,16 @@ import { readFile } from 'fs/promises';
 import $RefParser from "@apidevtools/json-schema-ref-parser";
 
 import { register } from './dynamodb-handler.mjs';
-import { HEADERS, SCHEMA_OPERATION } from './const.mjs';
+import { HEADERS, SCHEMA_OPERATION, methodNotAllowed } from './const.mjs';
 
 const yaml = YAML.parse(await readFile(new URL('./app-schema.yaml', import.meta.url), { encoding: 'utf8' }));
 const schema = await $RefParser.dereference(yaml);
 
 // create api with your definition file or object
-const api = new OpenAPIBackend({ 
+const api = new OpenAPIBackend({
   definition: schema,
   customizeAjv: (ajv, ajvOpts, validationContext) => {
-    addFormats(ajv); 
+    addFormats(ajv);
     return ajv;
   }
 });
@@ -37,6 +37,17 @@ api.register('validationFail', (c, req, res) => ({
   body: JSON.stringify({ status: 400, errors: c.validation.errors }),
   headers: HEADERS
 }));
+
+api.register('methodNotAllowed', (c, req, res) => {
+  if (c.request.method === "options") {
+    return {
+      statusCode: 200,
+      headers: HEADERS
+    };
+  } else {
+    return methodNotAllowed(c.request.method);
+  }
+});
 
 // initalize the backend
 api.init();

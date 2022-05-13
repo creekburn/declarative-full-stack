@@ -1,7 +1,10 @@
 # TODO
 
 ## Milestone 1
-MVP for basic setup.
+MVP for basic setup and POC.
+
+* Application - Everything built from the schema.
+* Environment - Running Application.
 
 ### Priority
 
@@ -13,26 +16,17 @@ MVP for basic setup.
   * Edit
   * Delete Buttons
 3. Terraform
-4. Actions
 
 ### Architecture
 
-* AWS Lambda APIs
-* AWS S3 Hosted SPA
-* AWS DynamoDB
-* Terraform Deployment
-* Github Actions CI/CD
-
-* Open API Driven Lambdas
-  * Handle Additional Error Types
-* Open API ORM
-  * Setup DynamoDB Local
-  * Implement ORM
-
-* E2E Test from Schema
-
-* Mongo DB - Cuz I'm dumb
-
+* Infrastructure
+  * AWS Lambda APIs
+  * AWS S3 Hosted SPA
+  * AWS DynamoDB
+  * Terraform Deployment
+* API
+  * Open API Driven Lambdas
+  * Open API ORM for dynamoDB
 
 ### Features
 
@@ -47,20 +41,32 @@ MVP for basic setup.
     * In Progress
     * Done
   * Priority
-* TODO Feed - Order by Due Date then Priority, with Status Changer
-* Login - All TODO are Authorized to single user for CRUD
-
 
 ## Milestone 2
 
 ### Features
 
-* Allow Dynamic IDs
+* Testing
+  * E2E Test from Schema
+  * Unit Testing
+* Schemas
+  * Schema as npm module
+  * Allow Dynamic IDs
+  * Dynamically Set OpenAPI Servers
+* Login - All TODO are Authorized to single user for CRUD
 * Searching
   * Pagination
   * Sort
   * Filters
-* UI
-  * Error Handling
+* SPA
   * Localization
   * Bake Schema into Application
+  * Environment Variable Handling
+* API
+  * Handle Additional Error Types
+  * Environment Variable Handling
+* Error Design
+* Infrastructure
+  * Logging
+  * Capacity/Scaling Alarms
+  * SPA Caching

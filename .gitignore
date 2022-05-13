@@ -7,3 +7,4 @@ node_modules
 *.tfstate
 *.tfstate.d
 app-schema.yaml
+terraform/lambda

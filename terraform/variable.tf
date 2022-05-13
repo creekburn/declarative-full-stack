@@ -1,16 +1,17 @@
-variable "region" {
-  type = string
-  default = "us-west-2"
-  description = "AWS Region to Target"
+variable "base_cidr" {
+  type        = string
+  default     = "11.0.0.0/16"
+  description = "CIDR to divide up."
 }
 
-variable "local_endpoint" {
-  type = string
-  default = "http://localhost:4566"
-  description = "Endpoint in the local environment to use for aws services."
+variable "az_count" {
+  type        = number
+  default     = 2
+  description = "Number of availability zones within the region to use."
 }
 
-variable "LAMBDA_MOUNT_CWD" {
-  type = string
-  default = "/c/workspace/todo/lambda"
+variable "top_level_domain" {
+  type        = string
+  default     = "creek-burn.net"
+  description = "Top Level Domain to create subdomains from."
 }
