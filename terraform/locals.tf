@@ -11,7 +11,6 @@ locals {
 
   tags = {
     environment = local.environment
-    region      = local.region
     application = local.application
     version     = local.schema.info.version
   }

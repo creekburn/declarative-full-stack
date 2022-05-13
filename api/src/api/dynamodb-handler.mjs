@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { v4 } from 'uuid';
 import { DynamoDBClient, CreateTableCommand, DescribeTableCommand, ResourceNotFoundException, ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { SCHEMA_OPERATION, JSON_MIME_TYPE, ok, internalServerError, notFound, methodNotAllowed } from './const.mjs';
 
 const client = new DynamoDBClient({ endpoint: process.env.DYNAMODB_ENDPOINT });
@@ -9,15 +9,15 @@ const docs = DynamoDBDocument.from(client);
 
 const TABLES = {};
 
-export const toTableName = (name) => _.kebabCase(name)
+export const toTableName = (name) => _.kebabCase(name);
 
 const METHOD_HANDLER = {
-  'get': async (c) => {
+  get: async (c) => {
     const schema = c.operation.responses['200'].content[JSON_MIME_TYPE].schema;
     if (schema.type === 'array') {
       const result = await docs.scan({
         TableName: toTableName(schema.items.title),
-        Select: 'ALL_ATTRIBUTES'
+        Select: 'ALL_ATTRIBUTES',
       });
       console.log(`RESULT: ${JSON.stringify(result)}`);
       return ok(result.Items);
@@ -26,8 +26,8 @@ const METHOD_HANDLER = {
         TableName: toTableName(schema.title),
         Select: 'ALL_ATTRIBUTES',
         Key: {
-          id: c.request.params.id
-        }
+          id: c.request.params.id,
+        },
       });
       console.log(`RESULT: ${JSON.stringify(result)}`);
       if (result.Item) {
@@ -37,7 +37,7 @@ const METHOD_HANDLER = {
       }
     }
   },
-  'put': async (c) => {
+  put: async (c) => {
     const schema = c.operation.responses['200'].content[JSON_MIME_TYPE].schema;
     const Item = _.omit(c.request.requestBody, ['id']);
     try {
@@ -45,11 +45,16 @@ const METHOD_HANDLER = {
         TableName: toTableName(schema.title),
         ReturnValues: 'ALL_NEW',
         Key: {
-          id: c.request.params.id
+          id: c.request.params.id,
         },
-        ExpressionAttributeNames: _.reduce(_.keys(Item), (acc, key) => (acc[`#${key}`] = key, acc), {}),
-        ExpressionAttributeValues: _.reduce(Item, (acc, value, key) => (acc[`:${key}`] = value, acc), {}),
-        UpdateExpression: 'SET ' + _.join(_.map(_.keys(Item), (key) => `#${key} = :${key}`), ', ')
+        ExpressionAttributeNames: _.reduce(_.keys(Item), (acc, key) => ((acc[`#${key}`] = key), acc), {}),
+        ExpressionAttributeValues: _.reduce(Item, (acc, value, key) => ((acc[`:${key}`] = value), acc), {}),
+        UpdateExpression:
+          'SET ' +
+          _.join(
+            _.map(_.keys(Item), (key) => `#${key} = :${key}`),
+            ', '
+          ),
       };
       console.log(`INPUT: ${JSON.stringify(input)}`);
       const result = await docs.update(input);
@@ -64,28 +69,28 @@ const METHOD_HANDLER = {
       }
     }
   },
-  'post': async (c) => {
+  post: async (c) => {
     const schema = c.operation.responses['200'].content[JSON_MIME_TYPE].schema;
-    const Item = _.merge({}, c.request.requestBody, { id: v4() })
+    const Item = _.merge({}, c.request.requestBody, { id: v4() });
     const result = await docs.put({
       TableName: toTableName(schema.title),
-      Item
+      Item,
     });
     console.log(`RESULT: ${JSON.stringify(result)}`);
     return ok(Item);
   },
-  'delete': async (c) => {
+  delete: async (c) => {
     const schema = c.operation.responses['200'].content[JSON_MIME_TYPE].schema;
     const result = await docs.delete({
       TableName: toTableName(schema.title),
       ReturnValues: 'ALL_OLD',
       Key: {
-        id: c.request.params.id
-      }
+        id: c.request.params.id,
+      },
     });
     console.log(`RESULT: ${JSON.stringify(result)}`);
     return ok(result.Attributes);
-  }
+  },
 };
 
 export const operationHandler = async (c, req, res) => {
@@ -104,56 +109,65 @@ export const operationHandler = async (c, req, res) => {
 
 export const register = (api, schema) => {
   const operationIds = _.flatMap(schema.paths, (pathItem) => {
-    return _.map(_.pickBy(pathItem, (operation) => _.has(operation, 'operationId') && operation.operationId !== SCHEMA_OPERATION), (operation) => {
-      let schema = operation.responses['200'].content[JSON_MIME_TYPE].schema;
-      if (schema.type === 'array') {
-        schema = schema.items;
-      }
+    return _.map(
+      _.pickBy(pathItem, (operation) => _.has(operation, 'operationId') && operation.operationId !== SCHEMA_OPERATION),
+      (operation) => {
+        let schema = operation.responses['200'].content[JSON_MIME_TYPE].schema;
+        if (schema.type === 'array') {
+          schema = schema.items;
+        }
 
-      // TODO: Enforce schema type: object
+        // TODO: Enforce schema type: object
 
-      if (!TABLES[schema.title]) {
-        TABLES[schema.title] = 'REQUESTED';
-        const command = new DescribeTableCommand({
-          TableName: toTableName(schema.title)
-        });
-
-        client.send(command)
-          .then(result => {
-            console.log('Table Found');
-            TABLES[schema.title] = result.Table;
-          })
-          .catch(err => {
-            if (err instanceof ResourceNotFoundException) {
-              const input = {
-                TableName: toTableName(schema.title),
-                BillingMode: 'PAY_PER_REQUEST',
-                AttributeDefinitions: [{
-                  AttributeName: 'id',
-                  AttributeType: 'S'
-                }],
-                KeySchema: [{
-                  AttributeName: 'id',
-                  KeyType: 'HASH'
-                }]
-              };
-              console.log(`CREATE TABLE COMMAND INPUT: ${JSON.stringify(input)}`)
-              const command = new CreateTableCommand(input);
-              return client.send(command)
-                .then(result => {
-                  TABLES[schema.title] = result.TableDescription;
-                })
-                .catch(err => {
-                  console.error(`Create Table Error: ${err.message}`);
-                });
-            } else {
-              console.error(`Describe Table Error: ${err.message}`);
-            }
+        if (!TABLES[schema.title]) {
+          TABLES[schema.title] = 'REQUESTED';
+          const command = new DescribeTableCommand({
+            TableName: toTableName(schema.title),
           });
-      }
 
-      return operation.operationId;
-    })
+          client
+            .send(command)
+            .then((result) => {
+              console.log('Table Found');
+              TABLES[schema.title] = result.Table;
+            })
+            .catch((err) => {
+              if (err instanceof ResourceNotFoundException) {
+                const input = {
+                  TableName: toTableName(schema.title),
+                  BillingMode: 'PAY_PER_REQUEST',
+                  AttributeDefinitions: [
+                    {
+                      AttributeName: 'id',
+                      AttributeType: 'S',
+                    },
+                  ],
+                  KeySchema: [
+                    {
+                      AttributeName: 'id',
+                      KeyType: 'HASH',
+                    },
+                  ],
+                };
+                console.log(`CREATE TABLE COMMAND INPUT: ${JSON.stringify(input)}`);
+                const command = new CreateTableCommand(input);
+                return client
+                  .send(command)
+                  .then((result) => {
+                    TABLES[schema.title] = result.TableDescription;
+                  })
+                  .catch((err) => {
+                    console.error(`Create Table Error: ${err.message}`);
+                  });
+              } else {
+                console.error(`Describe Table Error: ${err.message}`);
+              }
+            });
+        }
+
+        return operation.operationId;
+      }
+    );
   });
   api.register(_.merge(..._.map(operationIds, (id) => ({ [id]: operationHandler }))));
-}
+};

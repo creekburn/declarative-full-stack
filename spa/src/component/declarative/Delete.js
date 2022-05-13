@@ -1,13 +1,6 @@
-import _ from 'lodash';
-
 import { init } from '../../service/OpenAPIClient';
 
-function Delete({
-  schema,
-  id,
-  operation,
-  onDelete = () => { }
-}) {
+function Delete({ schema, id, operation, onDelete = () => {} }) {
   // TODO: Dynamic Parameter generation?
   const parameters = [{ name: 'id', value: id, in: 'path' }];
 
@@ -17,7 +10,11 @@ function Delete({
     onDelete(response.data);
   };
 
-  return (<button className="btn-danger" onClick={handleDelete}>Delete</button>);
+  return (
+    <button className="btn-danger" onClick={handleDelete}>
+      Delete
+    </button>
+  );
 }
 
 export default Delete;

@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-export const getOperation = (schema, operationId) => {
+export const lookupOperation = (schema, operationId) => {
   const paths = (schema && schema.paths) || {};
   for (const pathPart of _.keys(paths)) {
     const path = paths[pathPart];
@@ -9,7 +9,7 @@ export const getOperation = (schema, operationId) => {
       if (operation.operationId === operationId) {
         return {
           method,
-          ...operation
+          ...operation,
         };
       }
     }

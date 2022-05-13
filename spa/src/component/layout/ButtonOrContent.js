@@ -1,6 +1,6 @@
 import { useState, useImperativeHandle, forwardRef } from 'react';
 
-function ButtonOrContent({label, open, children}, ref) {
+function ButtonOrContent({ label, open, children }, ref) {
   const [isOpen, setIsOpen] = useState(!!open);
 
   useImperativeHandle(ref, () => ({
@@ -9,7 +9,7 @@ function ButtonOrContent({label, open, children}, ref) {
     },
     open: () => {
       setIsOpen(true);
-    }
+    },
   }));
 
   const handleClick = (event) => {
@@ -22,11 +22,9 @@ function ButtonOrContent({label, open, children}, ref) {
     } else {
       return <button onClick={handleClick}>{label}</button>;
     }
-  }
+  };
 
-  return (<div>
-    {content(isOpen)}
-  </div>);
+  return <div>{content(isOpen)}</div>;
 }
 
 export default forwardRef(ButtonOrContent);

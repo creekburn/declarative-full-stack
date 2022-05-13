@@ -571,5 +571,5 @@ export const RESERVED_NAMES = [
   'WRAPPED',
   'WRITE',
   'YEAR',
-  'ZONE'
-]
+  'ZONE',
+];

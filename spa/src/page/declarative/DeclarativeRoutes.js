@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 import Create from '../../component/declarative/Create';
@@ -13,8 +13,8 @@ function DeclarativeRoutes({ schemaURL }) {
   useEffect(() => {
     setSchemaLoading(true);
     fetch(schemaURL)
-      .then(response => response.json())
-      .then(schema => {
+      .then((response) => response.json())
+      .then((schema) => {
         setSchema(schema);
         setSchemaLoading(false);
       });
@@ -22,28 +22,40 @@ function DeclarativeRoutes({ schemaURL }) {
 
   const navigateToIndex = () => {
     navigate('');
-  }
+  };
 
   const whileLoading = () => {
     if (schemaLoading) {
-      return <p className="center" aria-busy="true">Loading Schema</p>;
+      return (
+        <p className="center" aria-busy="true">
+          Loading Schema
+        </p>
+      );
     } else {
       // TODO: How to obtain operationIds?
-      return (<Routes>
-        <Route index element={<Read schema={schema} operation="apiGetTodos" />} />
-        <Route path="new" element={<Create schema={schema} operation="apiCreateTodo" onCreate={navigateToIndex} onCancel={navigateToIndex} />} />
-        <Route path=":id" element={<Update schema={schema} get="apiGetTodo" update="apiPutTodo" onUpdate={navigateToIndex} onCancel={navigateToIndex} />} />
-      </Routes>);
+      return (
+        <Routes>
+          <Route index element={<Read schema={schema} operation="apiGetTodos" />} />
+          <Route path="new" element={<Create schema={schema} operation="apiCreateTodo" onCreate={navigateToIndex} onCancel={navigateToIndex} />} />
+          <Route path=":id" element={<Update schema={schema} get="apiGetTodo" update="apiPutTodo" onUpdate={navigateToIndex} onCancel={navigateToIndex} />} />
+        </Routes>
+      );
     }
   };
 
-  return (<main className="container">
-    <div className="grid center">
-      <Link to=""><button>List</button></Link>
-      <Link to="new"><button>Create</button></Link>
-    </div>
-    {whileLoading()}
-  </main>);
+  return (
+    <main className="container">
+      <div className="grid center">
+        <Link to="">
+          <button>List</button>
+        </Link>
+        <Link to="new">
+          <button>Create</button>
+        </Link>
+      </div>
+      {whileLoading()}
+    </main>
+  );
 }
 
 export default DeclarativeRoutes;

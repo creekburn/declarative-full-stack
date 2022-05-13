@@ -1,31 +1,41 @@
 services:
   ui:
+    command: npm start
     depends_on:
       - sam
     image: node:17.9.0
+    networks:
+      - application
+    ports:
+      - 3000:3000
     volumes:
       - ./spa:/home/node/app
-    ports:
-      - "3000:3000"
     working_dir: /home/node/app
-    command: "npm start"
   sam:
+    build: ./api
+    command: local start-api --container-host host.docker.internal --host 0.0.0.0 --docker-network application -l /dev/stdout
     depends_on:
       - dynamodb
-    build: ./lambda
-    working_dir: /c/workspace/todo/lambda
+    networks:
+      - application
+    ports:
+      - 8080:3000
     volumes:
       - ~/.aws:/root/.aws
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./lambda:/c/workspace/todo/lambda
-    ports:
-      - "8080:3000"
-    command: local start-api --container-host host.docker.internal --host 0.0.0.0 --docker-network todo_default -l /dev/stdout
+      - ./api:/c/workspace/todo/api
+    working_dir: /c/workspace/todo/api
   dynamodb:
-    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    command: -jar DynamoDBLocal.jar -sharedDb -dbPath ./data
     image: 'amazon/dynamodb-local:1.18.0'
+    networks:
+      - application
     ports:
-      - "8000:8000"
+      - 8000:8000
     volumes:
       - ./dynamodb/data:/home/dynamodblocal/data
     working_dir: /home/dynamodblocal
+
+networks:
+  application:
+    name: application

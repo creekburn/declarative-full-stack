@@ -1,7 +1,7 @@
 data "archive_file" "api" {
   type        = "zip"
   output_path = "${path.module}/lambda/${local.environment}-${local.application}-api.zip"
-  source_dir  = "${path.module}/../lambda"
+  source_dir  = "${path.module}/../api"
   # TODO: Cleanup api (lambda) module.
   excludes = [
     "__tests__",
@@ -23,7 +23,7 @@ resource "aws_s3_object" "api" {
 
 resource "aws_lambda_function" "api" {
   function_name     = "${local.environment}-${local.application}-api"
-  role              = aws_iam_role.iam_for_lambda.arn
+  role              = aws_iam_role.api.arn
   s3_bucket         = aws_s3_object.api.bucket
   s3_key            = aws_s3_object.api.key
   s3_object_version = aws_s3_object.api.version_id

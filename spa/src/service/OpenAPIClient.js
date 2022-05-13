@@ -7,11 +7,11 @@ export const init = _.memoize(async (schema) => {
   }
   const api = new OpenAPIClientAxios({
     definition: schema,
-    withServer: process.env.REACT_APP_API_SCHEMA_SERVER_DESCRIPTION // TODO: Pass in as configuration
+    withServer: process.env.REACT_APP_API_SCHEMA_SERVER_DESCRIPTION, // TODO: Pass in as configuration
   });
   const client = await api.init();
   return {
     api,
-    client
+    client,
   };
 });

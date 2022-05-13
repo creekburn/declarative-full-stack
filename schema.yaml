@@ -77,7 +77,7 @@ components:
         - description
         - due
       properties:
-        id: 
+        id:
           title: ID
           description: Unique Identifier for this TODO
           type: string
@@ -123,7 +123,7 @@ components:
       required: true
       content:
         'application/json':
-          schema: 
+          schema:
             $ref: '#/components/schemas/todo'
           examples:
             basic:
@@ -149,7 +149,7 @@ components:
       description: Multiple TODOs
       content:
         'application/json':
-          schema: 
+          schema:
             $ref: '#/components/schemas/todo'
           examples:
             basic:
@@ -158,14 +158,14 @@ components:
       description: Multiple TODOs
       content:
         'application/json':
-          schema: 
+          schema:
             type: array
             items:
               $ref: '#/components/schemas/todo'
           examples:
             basic:
               $ref: '#/components/examples/todos'
-  examples: 
+  examples:
     'todos':
       summary: List of TODO
       description: An array containing a single TODO.

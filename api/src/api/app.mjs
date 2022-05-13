@@ -4,7 +4,7 @@ import addFormats from 'ajv-formats';
 import _ from 'lodash';
 import { URL } from 'url';
 import { readFile } from 'fs/promises';
-import $RefParser from "@apidevtools/json-schema-ref-parser";
+import $RefParser from '@apidevtools/json-schema-ref-parser';
 
 import { register } from './dynamodb-handler.mjs';
 import { HEADERS, SCHEMA_OPERATION, methodNotAllowed } from './const.mjs';
@@ -18,14 +18,14 @@ const api = new OpenAPIBackend({
   customizeAjv: (ajv, ajvOpts, validationContext) => {
     addFormats(ajv);
     return ajv;
-  }
+  },
 });
 
 // Schema Endpoint
 api.register(SCHEMA_OPERATION, (c, req, res) => ({
   statusCode: 200,
   body: JSON.stringify(schema),
-  headers: HEADERS
+  headers: HEADERS,
 }));
 
 // Dynamically Register Handlers
@@ -35,14 +35,14 @@ register(api, schema);
 api.register('validationFail', (c, req, res) => ({
   statusCode: 400,
   body: JSON.stringify({ status: 400, errors: c.validation.errors }),
-  headers: HEADERS
+  headers: HEADERS,
 }));
 
 api.register('methodNotAllowed', (c, req, res) => {
-  if (c.request.method === "options") {
+  if (c.request.method === 'options') {
     return {
       statusCode: 200,
-      headers: HEADERS
+      headers: HEADERS,
     };
   } else {
     return methodNotAllowed(c.request.method);
@@ -59,10 +59,9 @@ export const handler = async (event, context) => {
       path: event.path,
       query: event.queryStringParameters,
       body: event.body,
-      headers: event.headers
+      headers: event.headers,
     },
     event,
     context
   );
 };
-

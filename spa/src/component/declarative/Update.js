@@ -1,20 +1,14 @@
 import { useState, useEffect } from 'react';
 import Form from '@rjsf/core';
 import _ from 'lodash';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { init } from '../../service/OpenAPIClient';
-import { getOperation } from '../../service/helper';
+import { lookupOperation } from '../../service/helper';
 
 import Delete from './Delete';
 
-function Update({
-  schema,
-  get,
-  update,
-  onUpdate = () => { },
-  onCancel = () => { }
-}) {
+function Update({ schema, get, update, onUpdate = () => {}, onCancel = () => {} }) {
   const params = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({});
@@ -34,12 +28,11 @@ function Update({
       if (!isLoading || force) {
         setIsLoading(true);
         init(schema)
-          .then(res => res.client)
-          .then(client => {
-            return client[get](parameters, null, {})
-              .catch(error => {
-                return error.response;
-              });
+          .then((res) => res.client)
+          .then((client) => {
+            return client[get](parameters, null, {}).catch((error) => {
+              return error.response;
+            });
           })
           .then((response) => {
             setIsLoading(false);
@@ -52,7 +45,7 @@ function Update({
           .catch(console.error); // TODO: Replace with error display
       }
     }
-  }
+  };
 
   const handleSubmit = async ({ formData }, e) => {
     const { client } = await init(schema);
@@ -62,36 +55,40 @@ function Update({
 
   const whileLoadingSchema = () => {
     if (_.isEmpty(schema)) {
-      return (<p className="center" aria-busy="true">Loading Schema</p>);
+      return (
+        <p className="center" aria-busy="true">
+          Loading Schema
+        </p>
+      );
     } else {
       return whileLoadingData();
     }
-  }
+  };
 
   const whileLoadingData = () => {
     if (isLoading) {
-      return (<p className="center" aria-busy="true">Loading Data</p>);
+      return (
+        <p className="center" aria-busy="true">
+          Loading Data
+        </p>
+      );
     } else {
       return (
-        <Form schema={_.get(getOperation(schema, update), ['requestBody', 'content', 'application/json', 'schema'])}
-          formData={data}
-          onSubmit={handleSubmit} >
+        <Form schema={_.get(lookupOperation(schema, update), ['requestBody', 'content', 'application/json', 'schema'])} formData={data} onSubmit={handleSubmit}>
           <div className="grid">
             <button type="submit">Submit</button>
-            <button type="reset" onClick={onCancel}>Cancel</button>
+            <button type="reset" onClick={onCancel}>
+              Cancel
+            </button>
             {/* TODO: How to obtain operationId? */}
             <Delete schema={schema} id={data.id} operation="apiDeleteTodo" onDelete={onCancel} />
           </div>
         </Form>
       );
     }
-  }
+  };
 
-  return (
-    <>
-      {whileLoadingSchema()}
-    </>
-  );
+  return <>{whileLoadingSchema()}</>;
 }
 
 export default Update;

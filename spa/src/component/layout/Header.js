@@ -5,10 +5,16 @@ function Header() {
     <header className="container">
       <nav>
         <ul>
-          <li><Link to="/"><strong>Declarative App</strong></Link></li>
+          <li>
+            <Link to="/">
+              <strong>Declarative App</strong>
+            </Link>
+          </li>
         </ul>
         <ul>
-          <li><Link to="/todo">TODO</Link></li>
+          <li>
+            <Link to="/todo">TODO</Link>
+          </li>
         </ul>
       </nav>
     </header>

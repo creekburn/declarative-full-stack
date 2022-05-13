@@ -10,7 +10,7 @@ Description: >-
 # Transform section specifies one or more macros that AWS CloudFormation uses to process your template
 # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/transform-section-structure.html
 Transform:
-- AWS::Serverless-2016-10-31
+  - AWS::Serverless-2016-10-31
 
 Globals:
   Api:
@@ -25,27 +25,6 @@ Globals:
 Resources:
   # Each Lambda function is defined by properties:
   # https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-
-  getPing:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: src/handlers/ping.handler
-      Runtime: nodejs14.x
-      Architectures:
-        - x86_64
-      MemorySize: 128
-      Timeout: 100
-      Description: Respond with pong.
-      # Environment:
-      #   Variables:
-      #     # Make table name accessible as environment variable from function code during execution
-      #     SAMPLE_TABLE: !Ref SampleTable
-      Events:
-        Api:
-          Type: Api
-          Properties:
-            Path: /ping
-            Method: GET
 
   api:
     Type: AWS::Serverless::Function
@@ -72,7 +51,4 @@ Resources:
             Path: /api/{proxy+}
             Method: ANY
 
-Outputs:
-  WebEndpoint:
-    Description: "API Gateway endpoint URL for Prod stage"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+Outputs: {}
